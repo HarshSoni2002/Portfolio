@@ -4,6 +4,7 @@ import type React from "react"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { Mail, Github, Linkedin, Send } from "lucide-react"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -13,17 +14,17 @@ const socialLinks = [
   {
     icon: Github,
     label: "GitHub",
-    href: "https://github.com/harshsoni",
+    href: "https://github.com/HarshSoni2002",
   },
   {
     icon: Linkedin,
     label: "LinkedIn",
-    href: "https://linkedin.com/in/harshsoni",
+    href: "https://www.linkedin.com/in/harshsoni8262/",
   },
   {
     icon: Mail,
     label: "Email",
-    href: "mailto:harsh@example.com",
+    href: "mailto:harshsoni12062003@gmail.com",
   },
 ]
 
@@ -33,9 +34,41 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setIsSubmitting(false)
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const name = formData.get("name") as string
+    const email = formData.get("email") as string
+    const message = formData.get("message") as string
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, message }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send message")
+      }
+
+      toast.success("Message sent successfully!", {
+        description: "I'll get back to you as soon as possible.",
+      })
+
+      // Reset form
+      form.reset()
+    } catch (error) {
+      toast.error("Failed to send message", {
+        description: error instanceof Error ? error.message : "Please try again later.",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
