@@ -8,7 +8,7 @@ const experiences = [
   {
     company: "Tata Consultancy Services (TCS)",
     role: "Software Engineer",
-    period: "2023 – Present",
+    period: "May-2025 – Present",
     project: "Johnson & Johnson – Opcenter Manufacturing",
     responsibilities: [
       "Configuration and modeling of manufacturing execution systems",
